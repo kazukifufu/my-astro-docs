@@ -1,11 +1,23 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
+import DocViewer from '../components/DocViewer';
+import '../styles/global.css';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro ドキュメントサイト</title>
+	</head>
+	<body class="min-h-screen bg-gray-50 flex flex-col">
+		<header class="bg-white border-b border-gray-200 px-6 py-4">
+			<h1 class="text-xl font-bold text-gray-800">Astro ドキュメントサイト</h1>
+		</header>
+
+		{/* client:load を付与してブラウザでのReactの動作を有効化 */}
+		<DocViewer client:load />
+	</body>
+</html>
