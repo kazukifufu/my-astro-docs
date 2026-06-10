@@ -1,48 +1,32 @@
 // src/components/DocViewer.tsx
 import React, { useState } from 'react';
-import { Sidebar } from './Sidebar'; // { Sidebar } に修正
+import Sidebar from './Sidebar';
 
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-}
+export default function DocViewer() {
+  const [selectedArticle, setSelectedArticle] = useState<{title: string, content: string} | null>(null);
 
-interface Category {
-  id: string;
-  name: string;
-  articles: Article[];
-}
-
-interface DocViewerProps {
-  initialCategories: Category[];
-}
-
-export default function DocViewer({ initialCategories }: DocViewerProps) {
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-
-  const handleSelectArticle = (article: Article) => {
-    setSelectedArticle(article);
+  const handleSelectArticle = (title: string) => {
+    setSelectedArticle({
+      title: title,
+      content: `${title}の詳細コンテンツです。Astro ＋ Cloudflare Pagesの組み合わせにより、極限まで最適化された速度で表示されています。`
+    });
   };
 
   return (
     <div className="flex-1 grid grid-cols-4 overflow-hidden">
-      {/* 左側：カテゴリ一覧 */}
+      {/* 左側：カテゴリ一覧（割合 1） */}
       <aside className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto p-4">
-        <Sidebar categories={initialCategories} onSelectArticle={handleSelectArticle} />
+        <Sidebar onSelectArticle={handleSelectArticle} />
       </aside>
 
-      {/* 右側：記事表示エリア */}
+      {/* 右側：記事表示エリア（割合 3） */}
       <main className="col-span-3 bg-gray-50 overflow-y-auto p-8">
         {selectedArticle ? (
           <article className="max-w-3xl bg-white p-8 rounded-lg shadow-sm border border-gray-200">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-200">
               {selectedArticle.title}
             </h2>
-            {/* 改行コードを反映させるスタイルを適用 */}
-            <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {selectedArticle.content}
-            </div>
+            <p className="text-gray-700 leading-relaxed">{selectedArticle.content}</p>
           </article>
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-gray-400">

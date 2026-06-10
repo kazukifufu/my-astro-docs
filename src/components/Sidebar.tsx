@@ -1,5 +1,5 @@
 // src/components/Sidebar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Article {
   id: string;
@@ -19,26 +19,43 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ categories, onSelectArticle }) => {
-  // 渡されたカテゴリや記事データに基づいて自動ループ処理
+  const [openCategoryId, setOpenCategoryId] = useState<string | null>(categories[0]?.id || null);
+
+  const toggleCategory = (id: string) => {
+    setOpenCategoryId(openCategoryId === id ? null : id);
+  };
+
   return (
-    <aside className="w-64 bg-gray-100 p-4 border-r border-gray-200">
-      {categories.map((cat) => (
-        <div key={cat.id} className="mb-6">
-          <h2 className="font-bold text-gray-700 mb-2">{cat.name}</h2>
-          <ul>
-            {cat.articles.map((art) => (
-              <li key={art.id} className="mb-1">
-                <button
-                  onClick={() => onSelectArticle(art)}
-                  className="w-full text-left text-sm text-gray-600 hover:text-blue-600 hover:underline py-1"
-                >
-                  {art.title}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </aside>
+    <nav className="space-y-2">
+      {categories.map((category) => {
+        const isOpen = openCategoryId === category.id;
+        return (
+          <div key={category.id} className="border-b border-gray-100 pb-2">
+            <button
+              onClick={() => toggleCategory(category.id)}
+              className="w-full flex justify-between items-center text-left font-semibold text-gray-700 py-2 px-3 hover:bg-gray-50 rounded transition"
+            >
+              <span>{category.name}</span>
+              <span className="text-xs text-gray-400">{isOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {isOpen && (
+              <ul className="mt-1 ml-4 space-y-1 border-l-2 border-gray-200 pl-2">
+                {category.articles.map((article) => (
+                  <li key={article.id}>
+                    <button
+                      onClick={() => onSelectArticle(article)}
+                      className="w-full text-left text-sm text-gray-600 hover:text-orange-500 py-1.5 px-2 block rounded hover:bg-orange-50 transition"
+                    >
+                      {article.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </nav>
   );
 };
