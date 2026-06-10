@@ -1,11 +1,14 @@
+---
+// 1. ファイルの【一番最初】にハイフン3つがあり、ここでインポートやデータ取得を行います
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { DocViewer } from '../components/DocViewer'; // もしDocViewer側で全体を統括している場合
+import DocViewer from '../components/DocViewer'; // 元のDocViewerのインポート
+import '../styles/global.css';
 
-// 1. Markdownのコレクション（blog）から全記事データを自動取得
+// Markdownのコレクション（blog）から全記事データを自動取得
 const allPosts = await getCollection('blog');
 
-// 2. 取得したMarkdownデータを、SidebarやDocViewerが読めるカテゴリ構造に自動変換
+// 取得したMarkdownデータを、SidebarやDocViewerが読めるカテゴリ構造に自動変換
 const categories = [
   {
     id: 'cat_docker',
@@ -18,17 +21,24 @@ const categories = [
         content: post.body // Markdownの本文をそのまま流し込む
       }))
   }
-  // 他のカテゴリも同様にpost.data.categoryで自動分類可能
 ];
 ---
+{/* ↑ここで【絶対に一度だけ】ハイフン3つを閉じる。これより下はHTML/JSXエリアです */}
 
-<Layout title="Astro ドキュメントサイト">
-  <body class="min-h-screen bg-gray-50 flex flex-col">
-    <header class="bg-white border-b border-gray-200 px-6 py-4">
-        <h1 class="text-xl font-bold text-gray-800">Kazuki's Docs</h1>
-    </header>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Kazuki's Docs</title>
+	</head>
+	<body class="min-h-screen bg-gray-50 flex flex-col">
+		<header class="bg-white border-b border-gray-200 px-6 py-4">
+			<h1 class="text-xl font-bold text-gray-800">Kazuki's Docs</h1>
+		</header>
 
-    <!-- データをReactコンポーネントに渡して起動 -->
-    <DocViewer client:load initialCategories={categories} />
-  </body>
-</Layout>
+		{/* データをReactコンポーネントに渡して起動 */}
+		<DocViewer client:load initialCategories={categories} />
+	</body>
+</html>
