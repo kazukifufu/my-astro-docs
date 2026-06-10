@@ -1,14 +1,14 @@
 ---
-// 1. ファイルの【一番最初】にハイフン3つがあり、ここでインポートやデータ取得を行います
+// src/pages/index.astro
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import DocViewer from '../components/DocViewer'; // 元のDocViewerのインポート
+import DocViewer from '../components/DocViewer';
 import '../styles/global.css';
 
-// Markdownのコレクション（blog）から全記事データを自動取得
+// 1. Markdownのコレクション（blogなど）から全記事データを自動取得
+// ※もしコレクション名が異なる場合は 'blog' の部分を実際のフォルダ名に変更してください
 const allPosts = await getCollection('blog');
 
-// 取得したMarkdownデータを、SidebarやDocViewerが読めるカテゴリ構造に自動変換
+// 2. 取得したMarkdownデータを、Sidebarが認識できるカテゴリ構造にマッピング
 const categories = [
   {
     id: 'cat_docker',
@@ -23,7 +23,6 @@ const categories = [
   }
 ];
 ---
-{/* ↑ここで【絶対に一度だけ】ハイフン3つを閉じる。これより下はHTML/JSXエリアです */}
 
 <html lang="ja">
 	<head>
@@ -38,7 +37,7 @@ const categories = [
 			<h1 class="text-xl font-bold text-gray-800">Kazuki's Docs</h1>
 		</header>
 
-		{/* データをReactコンポーネントに渡して起動 */}
+		{/* 💡 ここが重要！ 生成した categories データを props として React に渡します */}
 		<DocViewer client:load initialCategories={categories} />
 	</body>
 </html>
