@@ -6,7 +6,7 @@ const categories = [
     id: 'cat1',
     name: '🎨 デザイン・UI',
     articles: [
-      { id: 'a1', title: 'Tailwind CSSで魅せるモダンUI' },
+      { id: 'a1', title: 'xxTailwind CSSで魅せるモダンUI' },
       { id: 'a2', title: 'ダークモードに対応する配色テクニック' },
       { id: 'a3', title: 'レスポンシブWebデザインの基本原則' },
     ]
