@@ -1,23 +1,34 @@
----
-// src/pages/index.astro
-import DocViewer from '../components/DocViewer';
-import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { DocViewer } from '../components/DocViewer'; // もしDocViewer側で全体を統括している場合
+
+// 1. Markdownのコレクション（blog）から全記事データを自動取得
+const allPosts = await getCollection('blog');
+
+// 2. 取得したMarkdownデータを、SidebarやDocViewerが読めるカテゴリ構造に自動変換
+const categories = [
+  {
+    id: 'cat_docker',
+    name: '🐳 インフラ・Docker',
+    articles: allPosts
+      .filter(post => post.data.category === '🐳 インフラ・Docker')
+      .map(post => ({
+        id: post.slug,
+        title: post.data.title,
+        content: post.body // Markdownの本文をそのまま流し込む
+      }))
+  }
+  // 他のカテゴリも同様にpost.data.categoryで自動分類可能
+];
 ---
 
-<html lang="ja">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astroで作ったドキュメントサイト</title>
-	</head>
-	<body class="min-h-screen bg-gray-50 flex flex-col">
-		<header class="bg-white border-b border-gray-200 px-6 py-4">
-			<h1 class="text-xl font-bold text-gray-800">Astro ドキュメントサイト</h1>
-		</header>
+<Layout title="Astro ドキュメントサイト">
+  <body class="min-h-screen bg-gray-50 flex flex-col">
+    <header class="bg-white border-b border-gray-200 px-6 py-4">
+        <h1 class="text-xl font-bold text-gray-800">Kazuki's Docs</h1>
+    </header>
 
-		{/* client:load を付与してブラウザでのReactの動作を有効化 */}
-		<DocViewer client:load />
-	</body>
-</html>
+    <!-- データをReactコンポーネントに渡して起動 -->
+    <DocViewer client:load initialCategories={categories} />
+  </body>
+</Layout>
